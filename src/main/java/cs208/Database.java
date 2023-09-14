@@ -499,7 +499,37 @@ public class Database
             System.out.println(sqlException.getMessage());
         }
     }
+    public void deleteExistingStudent (int idToDelete) {
+        String sql = 
+                "DELETE FROM students\n" +
+                "WHERE id = ?;";
+        try
+        (
+            Connection connection = getDatabaseConnection();
+            PreparedStatement sqlStatement = connection.prepareStatement(sql);
+        )
+        {
+            sqlStatement.setInt(1, idToDelete);
+
+            int numberOfRowsAffected = sqlStatement.executeUpdate();
+            System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
+
+            if (numberOfRowsAffected > 0)
+            {
+                System.out.println("SUCCESSFULLY deleted the student with id = " + idToDelete);
+            }
+            else 
+            {
+                System.out.println("!!! WARNING: failed to delete the student with id = " + idToDelete);
+            }
+        }
+
+
+        catch (SQLException sqlException) {
+            System.out.println("!!! SQLException: failed to delete class with id = " + idToDelete);
+            System.out.println(sqlException.getMessage());
+        }
+    
+    }
 
 }
-
-
