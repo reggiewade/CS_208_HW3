@@ -361,7 +361,7 @@ public class Database
                 // the resultSet.getDate() does not work in this case, so we're using the getString() method instead
                 String birthDate = resultSet.getString("birth_date");
 
-                // TODO: add your code here
+                System.out.printf("| %d | %s | %s | %s |%n", id, firstName, lastName, birthDate);
             }
         }
         catch (SQLException sqlException)
@@ -371,7 +371,7 @@ public class Database
         }
     }
 
-    public void addNewStudent(Student newStudent)
+    public void addNewStudent(Student newStudent) throws SQLException
     {
         // 💡 HINT: in a prepared statement
         // to set the date parameter in the format "YYYY-MM-DD", use the code:
@@ -380,7 +380,46 @@ public class Database
         // to set the date parameter in the unix format (i.e., milliseconds since 1970), use this code:
         // sqlStatement.setDate(columnIndexTBD, newStudent.getBirthDate());
 
-        // TODO: add your code here
+        String sql =
+                "INSERT INTO students (first_name, last_name, birth_date)\n" +
+                "VALUES (?, ?, ?);";
+
+        try
+        (
+            Connection connection = getDatabaseConnection();
+            PreparedStatement sqlStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        )
+        {
+            sqlStatement.setString(1, newStudent.getFirstName());
+            sqlStatement.setString(2, newStudent.getLastName());
+            sqlStatement.setDate(3, newStudent.getBirthDate());
+
+            int numberOfRowsAffected = sqlStatement.executeUpdate();
+            System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
+
+            if (numberOfRowsAffected > 0)
+            {
+                ResultSet resultSet = sqlStatement.getGeneratedKeys();
+
+                while (resultSet.next())
+                {
+                    // "last_insert_rowid()" is the column name that contains the id of the last inserted row
+                    // alternatively, we could have used resultSet.getInt(1); to get the id of the first column returned
+                    int generatedIdForTheNewlyInsertedStudent = resultSet.getInt("last_insert_rowid()");
+                    System.out.println("SUCCESSFULLY inserted a new student with id = " + generatedIdForTheNewlyInsertedStudent);
+
+                    // this can be useful if we need to make additional processing on the newClass object
+                    newStudent.setId(generatedIdForTheNewlyInsertedStudent);
+                }
+
+                resultSet.close();
+            }
+        }
+        catch (SQLException sqlException)
+        {
+            System.out.println("!!! SQLException: failed to insert into the students table");
+            System.out.println(sqlException.getMessage());
+        }
     }
 
     public void listAllRegisteredStudents()
@@ -428,4 +467,5 @@ public class Database
         System.out.println();
         System.out.println(Utils.characterRepeat('-', 80));
     }
+    
 }

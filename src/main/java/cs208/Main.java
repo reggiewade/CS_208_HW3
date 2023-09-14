@@ -1,6 +1,7 @@
 package cs208;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main
@@ -8,11 +9,10 @@ public class Main
     private static Database database;
     private static Scanner inputScanner;
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws SQLException
     {
         System.out.println("Starting the School Management System...");
 
-        // TODO: create a SQLite data source in IntelliJ with this file name
         String sqliteFileName = "cs208_hw3.sqlite";
 
         database = new Database(sqliteFileName);
@@ -60,7 +60,7 @@ public class Main
         System.out.println("34 - Show all classes in which a student is enrolled");
     }
 
-    public static void chooseMenuOptions()
+    public static void chooseMenuOptions() throws SQLException
     {
         boolean shouldExit = false;
 
@@ -248,7 +248,7 @@ public class Main
         database.listAllStudents();
     }
 
-    private static void menuAddNewStudent()
+    private static void menuAddNewStudent() throws SQLException
     {
         System.out.println("Adding new student...");
 
@@ -257,7 +257,11 @@ public class Main
         Date birthDate = null;
         try
         {
-            // TODO: add your code here
+            System.out.print("Enter the student's first name: ");
+            firstName = inputScanner.nextLine();
+
+            System.out.print("Enter the student's last name: ");
+            lastName = inputScanner.nextLine();
 
             System.out.print("Enter the student birth date in ISO format (yyyy-mm-dd): ");
             birthDate = Date.valueOf(inputScanner.nextLine());
@@ -268,7 +272,8 @@ public class Main
             return;
         }
 
-        // TODO: add your code here
+        Student newStudent = new Student(firstName, lastName, birthDate);
+        database.addNewStudent(newStudent);
     }
 
     private static void menuUpdateExistingStudentInformation()
