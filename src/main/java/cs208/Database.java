@@ -392,7 +392,7 @@ public class Database
         {
             sqlStatement.setString(1, newStudent.getFirstName());
             sqlStatement.setString(2, newStudent.getLastName());
-            sqlStatement.setDate(3, newStudent.getBirthDate());
+            sqlStatement.setString(3, newStudent.getBirthDate().toString());
 
             int numberOfRowsAffected = sqlStatement.executeUpdate();
             System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
@@ -467,5 +467,39 @@ public class Database
         System.out.println();
         System.out.println(Utils.characterRepeat('-', 80));
     }
-    
+    public void updateExistingStudentInformation (Student studentToUpdate) {
+        String sql = 
+            "UPDATE students\n" +
+            "SET first_name = ?, last_name = ?, birth_date = ?\n" +
+            "WHERE id = ?;";
+        try (
+            Connection connection = getDatabaseConnection();
+            PreparedStatement sqlStatement = connection.prepareStatement(sql);
+        )
+        {
+            sqlStatement.setString(1, studentToUpdate.getFirstName());
+            sqlStatement.setString(2, studentToUpdate.getLastName());
+            sqlStatement.setString(3, studentToUpdate.getBirthDate().toString());
+            sqlStatement.setInt(4, studentToUpdate.getId());
+
+            int numberOfRowsAffected = sqlStatement.executeUpdate();
+            System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
+
+            if (numberOfRowsAffected > 0 ) 
+            {
+                System.out.println("SUCCESSFULLY updated the student with id = " + studentToUpdate.getId());
+            }
+            else
+            {
+                System.out.println("!!! WARNING: failed to update student with the id = " + studentToUpdate.getId());
+            }
+        }
+        catch (SQLException sqlException) {
+            System.out.println("!!! SQLException: failed to update the class with id = " + studentToUpdate.getId());
+            System.out.println(sqlException.getMessage());
+        }
+    }
+
 }
+
+
