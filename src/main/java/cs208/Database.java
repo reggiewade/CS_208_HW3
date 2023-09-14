@@ -371,7 +371,7 @@ public class Database
         }
     }
 
-    public void addNewStudent(Student newStudent) throws SQLException
+    public int addNewStudent(Student newStudent) throws SQLException
     {
         // 💡 HINT: in a prepared statement
         // to set the date parameter in the format "YYYY-MM-DD", use the code:
@@ -420,6 +420,7 @@ public class Database
             System.out.println("!!! SQLException: failed to insert into the students table");
             System.out.println(sqlException.getMessage());
         }
+        return newStudent.getId();
     }
 
     public void listAllRegisteredStudents()
@@ -530,6 +531,40 @@ public class Database
             System.out.println(sqlException.getMessage());
         }
     
+    }
+
+    public void addStudentToClass (int studentId, int classId) {
+        String sql = 
+                "INSERT INTO registered_students (student_id, class_id)\n" +
+                "VALUES (?, ?);";
+        try
+        (
+            Connection connection = getDatabaseConnection();
+            PreparedStatement sqlStatement = connection.prepareStatement(sql);
+        )
+
+        {
+            sqlStatement.setInt(1, studentId);
+            sqlStatement.setInt(2, classId);
+
+            int numberOfRowsAffected = sqlStatement.executeUpdate();
+            System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
+
+            if (numberOfRowsAffected > 0 ) 
+            {
+                System.out.println("SUCCESSFULLY inserted student: " + studentId + " into class: " + classId);
+            }
+            else
+            {
+                System.out.println("!!! WARNING: failed to insert student into the class");
+            }
+        }
+        catch (SQLException sqlException) {
+            System.out.println("!!! SQLException: failed to insert student into the class");
+            System.out.println(sqlException.getMessage());
+        }
+        
+                
     }
 
 }

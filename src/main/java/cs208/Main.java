@@ -133,8 +133,9 @@ public class Main
                     menuListAllRegisteredStudents();
                     break;
 
-                //TODO: add your code here
-
+                case 31:
+                    menuAddStudentToClass();
+                    break;
 
                 default:
                     System.out.println("Invalid choice. Please enter a number such as 0, 1, 2, 10, 11, etc.");
@@ -248,7 +249,7 @@ public class Main
         database.listAllStudents();
     }
 
-    private static void menuAddNewStudent() throws SQLException
+    private static int menuAddNewStudent() throws SQLException
     {
         System.out.println("Adding new student...");
 
@@ -269,11 +270,11 @@ public class Main
         catch (Exception e)
         {
             System.out.println("Invalid input, please try again.");
-            return;
         }
 
         Student newStudent = new Student(firstName, lastName, birthDate);
-        database.addNewStudent(newStudent);
+        return database.addNewStudent(newStudent);
+        
     }
 
     private static void menuUpdateExistingStudentInformation()
@@ -326,6 +327,27 @@ public class Main
     {
         System.out.println("Listing all registered students...");
         database.listAllRegisteredStudents();
+    }
+    private static void menuAddStudentToClass () throws SQLException {
+        int userInput = 0;
+        int studentId = 0;
+        int classId = 0;
+
+        System.out.print("Type '1' to insert a NEW student, Type '0' to insert an existing student");
+        userInput = Integer.parseInt(inputScanner.nextLine());
+        boolean newOrExisting = userInput == 1;
+        if (newOrExisting == true) {
+            studentId = menuAddNewStudent();
+            System.out.print(studentId);
+        }
+        else {
+            System.out.print("Please enter the id of the student you would like to assign to a class: ");
+            studentId = Integer.parseInt(inputScanner.nextLine());
+        }
+        System.out.print("Please enter the class id to assign the student to: ");
+        classId = Integer.parseInt(inputScanner.nextLine());
+
+        database.addStudentToClass(studentId, classId);
     }
 
 }
