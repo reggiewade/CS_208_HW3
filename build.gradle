@@ -1,20 +1,34 @@
-plugins {
-    id 'java'
-}
+// allows execution of program (note: this automatically applies the 'java' plugin)
+apply plugin : 'application'
 
+// sets the fully qualified name of the main class in program [package.entry_class]
+// Gradle will then use this class as an entry point
+mainClassName = 'cs208.Main'
+
+// defines the group and version of project
 group = 'cs208'
 version = '1.0-SNAPSHOT'
 
+// configures the repositories from which your project will resolve its dependencies, in this case; mavenCentral 
 repositories {
     mavenCentral()
 }
 
+// lists projects dependecies for testing and implementation
 dependencies {
+    // helps manage versions of JUnit dependencies consistently
     testImplementation platform('org.junit:junit-bom:5.9.1')
+    // actual JUnit Jupiter dependency for testing
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    // allows to work with sqlite in a java application
     implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
 }
-
+// configures testing using the JUnit platform
 test {
     useJUnitPlatform()
+}
+// this will configure the run task, allowing the application to run in terminal
+// it sets the standard input stream (System.in) which allows you to interact via the terminal
+run {
+    standardInput = System.in
 }

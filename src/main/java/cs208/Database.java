@@ -373,13 +373,6 @@ public class Database
 
     public int addNewStudent(Student newStudent) throws SQLException
     {
-        // 💡 HINT: in a prepared statement
-        // to set the date parameter in the format "YYYY-MM-DD", use the code:
-        // sqlStatement.setString(columnIndexTBD, newStudent.getBirthDate().toString());
-        //
-        // to set the date parameter in the unix format (i.e., milliseconds since 1970), use this code:
-        // sqlStatement.setDate(columnIndexTBD, newStudent.getBirthDate());
-
         String sql =
                 "INSERT INTO students (first_name, last_name, birth_date)\n" +
                 "VALUES (?, ?, ?);";

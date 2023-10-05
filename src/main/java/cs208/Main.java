@@ -138,6 +138,7 @@ public class Main
                     break;
                 case 32:
                     menudropExistingStudentFromClass();
+                    break;
 
                 default:
                     System.out.println("Invalid choice. Please enter a number such as 0, 1, 2, 10, 11, etc.");
